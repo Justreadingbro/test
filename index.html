@@ -38,14 +38,14 @@
         let ws;
 
         function connectWebSocket() {
-            ws = new WebSocket('wss://192.168.3.188:81');
- // Replace 'ESP32_IP_ADDRESS' with your ESP32's IP address
+            ws = new WebSocket('wss://192.168.3.188:81'); // Ensure you're using 'wss://'
 
             ws.onopen = function() {
                 console.log('WebSocket connection opened.');
             };
 
             ws.onmessage = function(event) {
+                console.log('Message from server:', event.data);
                 if (event.data === 'alert') {
                     fetchLocation();
                 }
@@ -53,13 +53,15 @@
 
             ws.onclose = function() {
                 console.log('WebSocket connection closed. Reconnecting...');
-                setTimeout(connectWebSocket, 1000);
+                setTimeout(connectWebSocket, 1000);  // Try reconnecting after 1 second
             };
 
             ws.onerror = function(error) {
                 console.error('WebSocket error:', error);
             };
         }
+
+        connectWebSocket();  // Start the WebSocket connection
 
         function fetchLocation() {
             if (navigator.geolocation) {
@@ -112,8 +114,6 @@
                     break;
             }
         }
-
-        connectWebSocket();
     </script>
 </body>
 </html>
